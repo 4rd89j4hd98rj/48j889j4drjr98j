@@ -1,4 +1,4 @@
-
+#!/bin/bash
 set -u
 
 echo "🚀 Starting X-UI + Tor (with Direct non-Tor default) + nginx reverse proxy..."
@@ -205,7 +205,6 @@ update_setup_status() {
 }
 
 write_status_json() {
-   
     local code="$1" exit_ip="$2" verified="$3" reason="${4:-}"
     local reachable now
     now=$(date -u +%Y-%m-%dT%H:%M:%SZ)
@@ -283,7 +282,6 @@ EOF
 }
 
 wait_for_bootstrap() {
-
     local i="$1" code="$2" socks_port="$3" control_port="$4"
     local logfile="/var/log/tor/${code}/notices.log"
     local elapsed=0 bootstrapped=false
@@ -355,7 +353,6 @@ if [ "$PARALLEL_BOOTSTRAP" = "true" ]; then
         CODE=$(jq -r ".tor.countries[$i].code" "$CONFIG_FILE")
         wait_for_bootstrap "$i" "$CODE" "${SOCKS_PORT_OF[$CODE]}" "${CONTROL_PORT_OF[$CODE]}" &
         PIDS+=($!)
-       
         sleep 1
     done
     for pid in "${PIDS[@]}"; do
@@ -472,20 +469,20 @@ for i in $(seq 0 $((COUNTRY_COUNT - 1))); do
     [ "$is_verified" = "true" ] || continue
 
     TOR_LOCATIONS="${TOR_LOCATIONS}
-        location ${PATH_WS} {
-            proxy_pass http://127.0.0.1:${INBOUND_PORT};
-            proxy_http_version 1.1;
-            proxy_set_header Upgrade \$http_upgrade;
-            proxy_set_header Connection \$connection_upgrade;
-            proxy_set_header Host \$host;
-            proxy_set_header X-Real-IP \$remote_addr;
-            proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto \$scheme;
-            proxy_buffering off;
-            proxy_request_buffering off;
-            proxy_read_timeout 3600s;
-            proxy_send_timeout 3600s;
-        }
+          location ${PATH_WS} {
+              proxy_pass http://127.0.0.1:${INBOUND_PORT};
+              proxy_http_version 1.1;
+              proxy_set_header Upgrade \$http_upgrade;
+              proxy_set_header Connection \$connection_upgrade;
+              proxy_set_header Host \$host;
+              proxy_set_header X-Real-IP \$remote_addr;
+              proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto \$scheme;
+              proxy_buffering off;
+              proxy_request_buffering off;
+              proxy_read_timeout 3600s;
+              proxy_send_timeout 3600s;
+          }
 "
 done
 

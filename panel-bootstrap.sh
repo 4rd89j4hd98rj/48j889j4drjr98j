@@ -1,4 +1,4 @@
-
+#!/bin/bash
 set -u
 
 CONFIG_FILE="/etc/x-ui/config.json"
@@ -315,7 +315,7 @@ setup_outbounds_and_routing() {
         return 0
     }
 
-  
+
     for i in $(seq 0 $((count - 1))); do
         local code
         code=$(jq -r ".tor.countries[$i].code" "$CONFIG_FILE")
